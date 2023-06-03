@@ -48,8 +48,34 @@ def registered(name):
         "discord_id": "-1",
         "money": 0,
         "last_time": -1,
+        "vocabulary": "None Start",
+        "vocabulary_times": 0,
     }
     
     user_data["discord_id"] = name
     db["discord_user_data"].insert_one(user_data)
     return 1 # registered completed!
+
+def query_account_vocabulary(name):
+    for i in db["discord_user_data"].find():
+        if( i["discord_id"] == name ):
+            return i["vocabulary"]
+
+def vocabulary_insert(name,val):
+    
+    now_vocabulary = query_account_vocabulary(name)
+
+    query_data = { 'discord_id': name }
+    new_data = {'$set': { 'vocabulary': val }  }
+
+    db["discord_user_data"].update_one(query_data,new_data)
+def vocabulary_time_update(name,val):
+    
+    query_data = { 'discord_id': name }
+    new_data = {'$set': { 'vocabulary_times': val }  }
+
+    db["discord_user_data"].update_one(query_data,new_data)
+def query_times(name):
+    for i in db["discord_user_data"].find():
+        if( i["discord_id"] == name ):
+            return i["vocabulary_times"]
